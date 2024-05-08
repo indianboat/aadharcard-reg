@@ -43,7 +43,7 @@ export async function userRegistration(formData) {
       if (result) {
         return {
           success: true,
-          message: "Registration Successfull",
+          message: "Registration Successful",
           statusCode: 200,
           data: result.uid
         }
@@ -56,7 +56,6 @@ export async function userRegistration(formData) {
         }
       }
     }
-
 
   } catch (error) {
     return {

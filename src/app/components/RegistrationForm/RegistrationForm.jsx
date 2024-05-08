@@ -46,7 +46,7 @@ const RegistrationForm = () => {
     const res = await userRegistration(formData);
 
     if (res.success) {
-      toast.success(res.message + "Redirecting to download");
+      toast.success(res.message + ", redirecting...");
       formik.resetForm();
       formik.setFieldValue("user_image", null);
 

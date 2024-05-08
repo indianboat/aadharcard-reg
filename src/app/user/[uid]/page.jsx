@@ -3,7 +3,6 @@
 import { getUserInfo } from '@/actions/user/getUserInfo';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
-import { toast } from 'sonner';
 
 const UserAadharCardPage = ({ params }) => {
 
@@ -15,6 +14,7 @@ const UserAadharCardPage = ({ params }) => {
 
   const [userInfo, setUserInfo] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
     const user = async () => {
@@ -23,20 +23,18 @@ const UserAadharCardPage = ({ params }) => {
       if (res.success) {
         setUserInfo(JSON.parse(res.data));
       }
-      else {
-        toast.error(res.message);
+      else if (res.message === "Invalid Uid") {
+        setErrorMsg("setErrorMsg")
       }
     }
     user();
-  }, [])
-
-  // console.log(userInfo);
+  }, []);
 
   return (
     <>
       <div className="">
         {
-          loading ? <span>Loading</span> :
+          loading ? <div className="p-4 text-blue-600">Loading</div> : errorMsg !== "" ? <div className="p-4 text-rose-500">Invalid UID</div> : userInfo === null ? <div className="p-4 text-rose-500">No Aadhar Card Found</div> :
             <>
               <div className="flex flex-col items-center gap-8 p-4">
                 <div className="printable-content flex flex-col items-start space-y-4 justify-center border-2 rounded-2xl p-4 bg-white xl:w-5/12 lg:w-5/12 md:w-7/12 sm:w-8/12 w-full mx-auto">
@@ -45,7 +43,7 @@ const UserAadharCardPage = ({ params }) => {
                     <Image src={userInfo?.user_image || "/user-image.jpg"} width={500} height={500} className="aspect-square w-28 h-28 select-none" alt='user-image' priority />
                     <div className="">
                       <h1 className='text-lg font-medium capitalize'>{userInfo?.fname || "fname"} {userInfo?.lname || "lname"}</h1>
-                      <p>Gender: <span className='font-medium'>{userInfo?.gender}</span></p>
+                      <p>Gender: <span className='font-medium capitalize'>{userInfo?.gender}</span></p>
                       <p>DOB: <span className='font-medium'>{new Date(userInfo?.dob).toLocaleDateString()}</span></p>
                       <p>Mobile: <span className='font-medium'>{userInfo?.mobile}</span></p>
                       <p className='text-xl mt-3'>UID: <span className='text-xl font-bold'>{userInfo?.uid}</span></p>
@@ -57,7 +55,7 @@ const UserAadharCardPage = ({ params }) => {
                 <div className="printable-content flex flex-col items-start justify-between space-y-4 border-2 rounded-2xl p-5 bg-white xl:w-5/12 lg:w-5/12 md:w-7/12 sm:w-8/12 w-full mx-auto h-[318px]">
                   <Image className="select-none w-full" src="/aadharcard-top.jpg" width={500} height={500} alt='adharcard' priority />
                   <div className="">
-                    <h1 className='text-lg font-medium'>Resident of: <span>{userInfo?.address}, {userInfo?.city}, {userInfo?.state}- {userInfo?.pincode}</span></h1>
+                    <h1 className='text-lg font-medium capitalize'>Resident of: <span>{userInfo?.address}, {userInfo?.city}, {userInfo?.state}- {userInfo?.pincode}</span></h1>
                     <p className='text-xl mt-3'>UID: <span className='text-xl font-bold'>{userInfo?.uid}</span></p>
                   </div>
                   <Image src="/aadharcard-bottom.png" width={500} height={500} className="select-none w-full" alt='user-image' priority />

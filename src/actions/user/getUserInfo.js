@@ -7,6 +7,14 @@ export async function getUserInfo(uid) {
   try {
     connectDB();
 
+    if (!/^\d{16}$/.test(uid)) {
+      return {
+        success: false,
+        message: "Invalid Uid",
+        statusCode: 500
+      }
+    }
+
     const userExist = await User.findOne({ uid });
 
     if (!userExist) {
