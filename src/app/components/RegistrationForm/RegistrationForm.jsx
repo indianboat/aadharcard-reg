@@ -4,12 +4,13 @@ import { userRegistration } from "@/actions/user/userRegistration";
 import { useFormik } from "formik";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 import { toast } from "sonner";
 
 const RegistrationForm = () => {
 
-  const router = useRouter()
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -43,7 +44,9 @@ const RegistrationForm = () => {
     formData.append("pincode", values.pincode);
     formData.append("user_image", values.user_image);
 
+    setLoading(true);
     const res = await userRegistration(formData);
+    setLoading(false);
 
     if (res.success) {
       toast.success(res.message + ", redirecting...");
@@ -291,9 +294,12 @@ const RegistrationForm = () => {
           <div className="">
             <button
               type="submit"
-              className="bg-purple-800 text-white w-full px-4 py-2 rounded-xl outline-none shadow-md focus:ring-2 ring-offset-2 focus:ring-purple-800 transition-all"
+              disabled={loading}
+              className="bg-purple-800 text-white w-full px-4 py-2 rounded-xl outline-none shadow-md focus:ring-2 ring-offset-2 focus:ring-purple-800 transition-all disabled:bg-purple-800/50 disabled:cursor-not-allowed"
             >
-              Register
+              {
+                loading ? "Loading..." : "Register"
+              }
             </button>
           </div>
         </form>
