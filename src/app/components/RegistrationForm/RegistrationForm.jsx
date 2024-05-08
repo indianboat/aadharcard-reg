@@ -31,34 +31,41 @@ const RegistrationForm = () => {
 
   async function onSubmit(values) {
 
-    const formData = new FormData();
-    formData.append("fname", values.fname);
-    formData.append("lname", values.lname);
-    formData.append("mobile", values.mobile);
-    formData.append("email", values.email);
-    formData.append("address", values.address);
-    formData.append("dob", values.dob);
-    formData.append("gender", values.gender);
-    formData.append("city", values.city);
-    formData.append("state", values.state);
-    formData.append("pincode", values.pincode);
-    formData.append("user_image", values.user_image);
+    const maxSize = 500 * 1024; // 2MB in bytes
 
-    setLoading(true);
-    const res = await userRegistration(formData);
-    setLoading(false);
-
-    if (res.success) {
-      toast.success(res.message + ", redirecting...");
-      formik.resetForm();
-      formik.setFieldValue("user_image", null);
-
-      setTimeout(() => {
-        router.push(`/user/${res.data}`)
-      }, 2000);
+    if (values.user_image.size > maxSize) {
+      toast.error("Photo should be less than 500 KB in size.");
     }
     else {
-      toast.error(res.message);
+      const formData = new FormData();
+      formData.append("fname", values.fname);
+      formData.append("lname", values.lname);
+      formData.append("mobile", values.mobile);
+      formData.append("email", values.email);
+      formData.append("address", values.address);
+      formData.append("dob", values.dob);
+      formData.append("gender", values.gender);
+      formData.append("city", values.city);
+      formData.append("state", values.state);
+      formData.append("pincode", values.pincode);
+      formData.append("user_image", values.user_image);
+
+      setLoading(true);
+      const res = await userRegistration(formData);
+      setLoading(false);
+
+      if (res.success) {
+        toast.success(res.message + ", redirecting...");
+        formik.resetForm();
+        formik.setFieldValue("user_image", null);
+
+        setTimeout(() => {
+          router.push(`/user/${res.data}`)
+        }, 2000);
+      }
+      else {
+        toast.error(res.message);
+      }
     }
   }
 
