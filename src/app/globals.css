@@ -2,7 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+body {
+  background-color: rgba(233, 233, 233, 0.082);
+}
+
+/* :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
@@ -29,5 +33,16 @@ body {
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+} */
+
+
+@media print {
+  /* Hide everything except the content you want to print */
+  body * {
+    visibility: hidden;
+  }
+  .printable-content, .printable-content * {
+    visibility: visible;
   }
 }
